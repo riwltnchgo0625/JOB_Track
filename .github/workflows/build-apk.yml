@@ -21,9 +21,11 @@ jobs:
           gradle-version: '8.9'
       - name: Apply v1.4 patch
         run: python3 tools/patch_v14.py
+      - name: Apply v1.5 share import patch
+        run: python3 tools/patch_v15.py
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace
       - uses: actions/upload-artifact@v4
         with:
-          name: JOB_Track-v1.4-APK
+          name: JOB_Track-v1.5-APK
           path: app/build/outputs/apk/debug/app-debug.apk
