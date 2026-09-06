@@ -23,9 +23,23 @@ jobs:
         run: python3 tools/patch_v14.py
       - name: Apply v1.5 share import patch
         run: python3 tools/patch_v15.py
+      - name: Apply v1.6 startup hotfix
+        run: python3 tools/patch_v16.py
+      - name: Validate embedded JavaScript
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('app/src/main/assets/index.html').read_text(encoding='utf-8')
+          match = re.search(r'<script>(.*)</script>', html, re.S)
+          if not match:
+              raise SystemExit('script tag not found')
+          Path('/tmp/jobtrack-app.js').write_text(match.group(1), encoding='utf-8')
+          PY
+          node --check /tmp/jobtrack-app.js
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace
       - uses: actions/upload-artifact@v4
         with:
-          name: JOB_Track-v1.5-APK
+          name: JOB_Track-v1.6-APK
           path: app/build/outputs/apk/debug/app-debug.apk
