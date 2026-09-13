@@ -19,7 +19,7 @@ html=html.replace('기업 분석과 지원 현황</div>','기업 분석과 지�
 # replace initial sample/default storage block
 pattern=r"const K='jobtrack-v1'; const sample=\{.*?\}; let a=JSON\.parse\(localStorage\.getItem\(K\)\|\|'null'\)\|\|\[sample\]; for\(const c of a\)\{if\(c\.id==='codit'\)\{c\.website=c\.website\|\|sample\.website;c\.careersUrl=c\.careersUrl\|\|sample\.careersUrl\}\}"
 replacement="const K='jobtrack-v1'; const defaults="+json.dumps(defaults,ensure_ascii=False,separators=(',',':'))+"; let a=JSON.parse(localStorage.getItem(K)||'null')||defaults.map(x=>({...x}));"
-html,n=re.subn(pattern,replacement,html,count=1,flags=re.S)
+html,n=re.subn(pattern,lambda _m: replacement,html,count=1,flags=re.S)
 if n!=1:
     raise SystemExit('v1.9 default data patch target not found')
 
